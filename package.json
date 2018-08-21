@@ -2,7 +2,7 @@
   "name": "mgca",
   "version": "0.0.1",
   "description": "Implementation of multiple gene cluster alignment (MGCA) formalism",
-  "main": "index.js",
+  "main": "src/align.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
