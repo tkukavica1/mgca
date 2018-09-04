@@ -1,6 +1,10 @@
+require('./ms.js')
+
 var memo = {} // Dictionary used to memoize alignments that have already been calculated.
 const gapScore = -2
 const positionMatch = 3
+
+console.log('Input: ' + JSON.stringify([[1,2,3],[4,5,6,7]]) + ', Final Result: ' + JSON.stringify(alignTwo([[1,2,3],[4,5,6,7]])))
 
 function runMGCA(clusterMatrix) {
     console.log('Running multiple gene cluster alignment.')
@@ -29,40 +33,54 @@ function alignMultiple(clusterMatrix) {
 }
 
 function alignTwo(clusterMatrix) {
+    memo = {}
     // Returns an alignResult with the optimal clusterMatrix and alignment score.
     let key = generateKey(clusterMatrix)
     if (checkExistingAlignment(key)) {
         console.log('Key found in memoization hash!')
-        return memo[key]
     }
-    if (clusterMatrix[0].length === 0 && clusterMatrix[1].length === 0) {
-        // NEED TO MEMOIZE THIS AND OTHERS
-        return {clusterMatrix: clusterMatrix, score: 0}
+    else if (clusterMatrix[0].length === 0 && clusterMatrix[1].length === 0) {
+        memo[key] = {clusterMatrix: clusterMatrix, score: 0}
     }
-    if (clusterMatrix[0].length === 0) {
-        return {clusterMatrix: clusterMatrix, score: clusterMatrix[1].length * gapScore}
+    else if (clusterMatrix[0].length === 0) {
+        let gapArray = buildGapArray(clusterMatrix[1].length)
+        memo[key] = {clusterMatrix: [gapArray, clusterMatrix[1]], score: clusterMatrix[1].length * gapScore}
     }
-    if (clusterMatrix[1].length === 0) {
-        return {clusterMatrix: clusterMatrix, score: clusterMatrix[0].length * gapScore}
-    }
-    let subArray1 = clusterMatrix[0].splice(clusterMatrix[0].length - 1, 1)
-    let subArray2 = clusterMatrix[1].splice(clusterMatrix[1].length - 1, 1)
-    let alignment1 = alignTwo([subArray1, clusterMatrix[1]])
-    let alignment2 = alignTwo([clusterMatrix[0], subArray2])
-    let alignment3 = alignTwo([subArray1, subArray2])
-    let optimalAlignment = {clusterMatrix: [], score: 0}
-    if (alignment1.score >= alignment2.score && alignment1.score >= alignment3.score) {
-        optimalAlignment.score += alignment1.score
-        optimalAlignment.clusterMatrix[0] = clusterMatrix[0]
-        optimalAlignment.clusterMatrix[1] = alignment1.clusterMatrix[1].concat('-')
-    }
-    else if (alignment2.score >= alignment3.score) {
-        optimalAlignment.score += alignment2.score
+    else if (clusterMatrix[1].length === 0) {
+        let gapArray = buildGapArray(clusterMatrix[0].length)
+        memo[key] = {clusterMatrix: [clusterMatrix[0], gapArray], score: clusterMatrix[0].length * gapScore}
     }
     else {
-        optimalAlignment.score += alignment3.score
+        let subArray1 = clusterMatrix[0].slice(0, clusterMatrix[0].length - 1)
+        let subArray2 = clusterMatrix[1].slice(0, clusterMatrix[1].length - 1)
+        let alignment1 = alignTwo([subArray1, clusterMatrix[1]])
+        let alignment2 = alignTwo([clusterMatrix[0], subArray2])
+        let alignment3 = alignTwo([subArray1, subArray2])
+        alignment1.score += gapScore
+        alignment2.score += gapScore
+        if (clusterMatrix[0][clusterMatrix[0].length - 1] === clusterMatrix[1][clusterMatrix[1].length - 1]) {
+            alignment3.score += positionMatch
+        }
+        let optimalAlignment = {clusterMatrix: [[],[]], score: 0}
+        if (alignment1.score >= alignment2.score && alignment1.score >= alignment3.score) {
+            alignment1.clusterMatrix[0].push(clusterMatrix[0][clusterMatrix[0].length - 1])
+            alignment1.clusterMatrix[1].push('-')
+            optimalAlignment = alignment1
+        }
+        else if (alignment2.score >= alignment3.score) {
+            alignment2.clusterMatrix[0].push('-')
+            alignment2.clusterMatrix[1].push(clusterMatrix[1][clusterMatrix[1].length - 1])
+            optimalAlignment = alignment2
+        }
+        else {
+            optimalAlignment.score += alignment3.score
+            alignment3.clusterMatrix[0].push(clusterMatrix[0][clusterMatrix[0].length - 1])
+            alignment3.clusterMatrix[1].push(clusterMatrix[1][clusterMatrix[1].length - 1])
+            optimalAlignment = alignment3
+        }
+        memo[key] = optimalAlignment
     }
-    return optimalAlignment
+    return memo[key]
 }
 
 /**
@@ -101,6 +119,20 @@ function generateKey(clusterMatrix) {
 }
 
 /**
+ * Check if the MGCA represented by the key has already been computed.
+ * 
+ * @param {any} length The length of the gap array to be created.
+ * 
+ * @returns An array of desired length with a gap in all elements.
+ */
+function buildGapArray(length) {
+    let gapArray = []
+    for (let i = 0; i < length; i++)
+        gapArray.push('-')
+    return gapArray
+}
+
+/**
  * Test function that prints to the console.
  */
 function testConnection() {
@@ -108,4 +140,6 @@ function testConnection() {
 }
 
 exports.testConnection = testConnection
+exports.alignMultiple = alignMultiple
+exports.alignTwo = alignTwo
 exports.runMGCA = runMGCA
