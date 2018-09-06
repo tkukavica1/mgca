@@ -4,9 +4,8 @@ var memo = {} // Dictionary used to memoize alignments that have already been ca
 const gapScore = -2
 const positionMatch = 4
 
-let input = [[1,2,3,4],[1,2,4,3],[2,3],[2,3,5]]
-console.log('Input: ' + JSON.stringify(input) + ', Result: ' + JSON.stringify(runMGCA(input)))
-
+// let input = [[1,2,3,4],[1,2,4,3],[2,3],[2,3,5]]
+// console.log('Input: ' + JSON.stringify(input) + ', Result: ' + JSON.stringify(runMGCA(input)))
 
 /**
  * Runs MGCA on an array of gene clusters, which we call a cluster matrix.
