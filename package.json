@@ -1,0 +1,29 @@
+{
+  "name": "mgca",
+  "version": "0.0.1",
+  "description": "Implementation of multiple gene cluster alignment (MGCA) formalism",
+  "main": "src/align.js",
+  "scripts": {
+    "test": "NODE_PATH=node_modules node_modules/.bin/mocha --reporter ${MOCHA_REPORTER-spec} $(find tests -name '*tests.js')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tkukavica1/mgca.git"
+  },
+  "keywords": [
+    "bioinformatics",
+    "gene",
+    "cluster",
+    "alignment"
+  ],
+  "author": "Tony Kukavica",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tkukavica1/mgca/issues"
+  },
+  "homepage": "https://github.com/tkukavica1/mgca#readme",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  }
+}
