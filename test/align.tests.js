@@ -11,7 +11,7 @@ describe('Test suite for align.js', function() {
         })
         it('2) Aligning two identical sequences', function() {
           let result = mgca.alignTwo([[1,2,3,4],[1,2,3,4]])
-          expect(result).eql({clusterMatrix: [[1,2,3,4],[1,2,3,4]], score: 12})
+          expect(result).eql({clusterMatrix: [[1,2,3,4],[1,2,3,4]], score: 16})
         })
         it('3) Aligning two sequences where first is empty', function() {
           let result = mgca.alignTwo([[],[1,2,3,4,5]])
@@ -31,7 +31,7 @@ describe('Test suite for align.js', function() {
         })
         it('7) Aligning two longer sequences requiring gaps and matches', function() {
           let result = mgca.alignTwo([[1,2,3,3,4,5,6,7],[1,8,8,2,3,3,4,6,5,6,7]])
-          expect(result).eql({clusterMatrix:[[1,'-','-',2,3,3,4,'-',5,6,7],[1,8,8,2,3,3,4,6,5,6,7]],score: 18})
+          expect(result).eql({clusterMatrix:[[1,'-','-',2,3,3,4,'-',5,6,7],[1,8,8,2,3,3,4,6,5,6,7]],score: 26})
         })
     })
 })

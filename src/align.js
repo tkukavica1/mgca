@@ -2,7 +2,11 @@ require('./ms.js')
 
 var memo = {} // Dictionary used to memoize alignments that have already been calculated.
 const gapScore = -2
-const positionMatch = 3
+const positionMatch = 4
+
+let input = [[1,2,3,4],[1,2,4,3],[2,3],[2,3,5]]
+console.log('Input: ' + JSON.stringify(input) + ', Result: ' + JSON.stringify(runMGCA(input)))
+
 
 function runMGCA(clusterMatrix) {
     console.log('Running multiple gene cluster alignment.')
@@ -14,7 +18,7 @@ function runMGCA(clusterMatrix) {
     }
     if (clusterMatrix.length == 2) {
         try {
-            return align(clusterMatrix[0], clusterMatrix[1])
+            return alignTwo(clusterMatrix)
         } catch (error) {
             throw 'Error: Failed to align the 2 provided gene clusters.'
         }
@@ -23,11 +27,27 @@ function runMGCA(clusterMatrix) {
         console.log('Less than 2 gene clusters provided, returning original input.')
         return clusterMatrix
     }
+    else {
+        try {
+            return alignMultiple(clusterMatrix)
+        } catch (error) {
+            throw 'Error: Failed to align the provided gene clusters.'
+        }
+    }
 }
 
 function alignMultiple(clusterMatrix) {
     // Returns an alignResult representing many clusters in optimal alignment and the score.
-    // IDEA: Create 3 temp matrices (gap left, gap right, no gap), and test on each one. Return the optimal one.
+    let final = []
+    let temp = {clusterMatrix: [[],clusterMatrix[0]], score: 0}
+    for (let i = 1; i < clusterMatrix.length; i++) {
+        let newArr = alignTwo([temp.clusterMatrix[1], clusterMatrix[i]])
+        temp = newArr
+        if (i === 1)
+            final.push(temp.clusterMatrix[0])
+        final.push(temp.clusterMatrix[1])
+    }
+    return final
 }
 
 function alignTwo(clusterMatrix) {
