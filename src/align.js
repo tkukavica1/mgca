@@ -8,6 +8,13 @@ let input = [[1,2,3,4],[1,2,4,3],[2,3],[2,3,5]]
 console.log('Input: ' + JSON.stringify(input) + ', Result: ' + JSON.stringify(runMGCA(input)))
 
 
+/**
+ * Runs MGCA on an array of gene clusters, which we call a cluster matrix.
+ * 
+ * @param {any} clusterMatrix An array where each element is an array representing one cluster.
+ * 
+ * @returns The aligned gene clusters.
+ */
 function runMGCA(clusterMatrix) {
     console.log('Running multiple gene cluster alignment.')
     memo = {}
@@ -36,6 +43,13 @@ function runMGCA(clusterMatrix) {
     }
 }
 
+/**
+ * Aligns more than 2 gene clusters in the form of an array of clusters (matrix).
+ * 
+ * @param {any} clusterMatrix An array where each element is an array representing one cluster.
+ * 
+ * @returns The aligned gene clusters.
+ */
 function alignMultiple(clusterMatrix) {
     // Returns an alignResult representing many clusters in optimal alignment and the score.
     let final = []
@@ -50,6 +64,15 @@ function alignMultiple(clusterMatrix) {
     return final
 }
 
+/**
+ * Runs a recursive pairwise alignment algorithm on two gene cluster sequences.
+ * 
+ * @param {any} clusterMatrix
+ * 
+ * @returns A dictionary with properties:
+ *              clusterMatrix --> An array with two elements, the two optimally aligned sequences.
+ *              score --> The optimal alignment score based on provided match and gap scores. 
+ */
 function alignTwo(clusterMatrix) {
     memo = {}
     // Returns an alignResult with the optimal clusterMatrix and alignment score.
