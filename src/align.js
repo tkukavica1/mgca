@@ -4,7 +4,7 @@ var memo = {} // Dictionary used to memoize alignments that have already been ca
 const gapScore = -2
 const positionMatch = 4
 
-// let input = [[1,2,3,4],[1,2,4,3],[2,3],[2,3,5]]
+// let input = [[4,3,2,1],[4,3,1],[4,3,1],[4,3,1]]
 // console.log('Input: ' + JSON.stringify(input) + ', Result: ' + JSON.stringify(runMGCA(input)))
 
 /**
@@ -60,7 +60,7 @@ function alignMultiple(clusterMatrix) {
             final.push(temp.clusterMatrix[0])
         final.push(temp.clusterMatrix[1])
     }
-    return final
+    return {clusterMatrix: final, score: temp.score}
 }
 
 /**
